@@ -20,11 +20,9 @@ def recombine(contents):
 	for c in contents:
 		revd.append(c[::-1])
 
-	# Up to down - rotate 90 degrees
-	# len of a line
+	# Up to down
 	for i in range(MAX_COLUMNS):
 		tmp = []
-		# amount of rows
 		for j in range(MAX_ROWS):
 			tmp.append(contents[j][i])
 		up_down.append("".join(tmp))
@@ -35,7 +33,6 @@ def recombine(contents):
 		down_up.append(c[::-1])
 
 	# Diagonal top left to bottom right
-	# len of a line
 	for i in range(MAX_COLUMNS):
 		if i == 0:
 			# do all diagonals for this row
@@ -43,7 +40,7 @@ def recombine(contents):
 				tmp = []
 				for k in range(MAX_ROWS):
 					l = k+j
-					if l < MAX_COLUMNS-1:
+					if l < MAX_COLUMNS:
 						tmp.append(contents[k][l])
 					else:
 						break
@@ -57,6 +54,7 @@ def recombine(contents):
 					tmp.append(contents[j][k])
 				else:
 					break
+			#print("".join(tmp))
 			diagonal_tl_br.append("".join(tmp))
 
 	# Reverse the one above
@@ -75,20 +73,15 @@ def recombine(contents):
 						tmp.append(contents[k][l])
 					else:
 						break
+				# print("".join(tmp))
 				diagonal_tr_bl.append("".join(tmp))
 		else:
 			# do only one column per row
 			tmp = []
 			for j in range(i, MAX_ROWS):
-				k = MAX_COLUMNS-j
-				print(f"Row={j}, col={k}")
-				if k < :
-					tmp.append(contents[j][k])
-				else:
-					break
-			print("".join(tmp))
+				k = MAX_COLUMNS-1-j+i
+				tmp.append(contents[j][k])
 			diagonal_tr_bl.append("".join(tmp))
-	#print(diagonal_tr_bl)
 
 	# Reverse the one above
 	for c in diagonal_tr_bl:
@@ -122,6 +115,8 @@ def part_one():
 	for c in e:
 		amount += len(re.findall(XMAS, c))
 	for c in f:
+		amount += len(re.findall(XMAS, c))
+	for c in g:
 		amount += len(re.findall(XMAS, c))
 
 	print("Amount of 'XMAS' found:", amount) # 

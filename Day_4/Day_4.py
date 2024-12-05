@@ -149,13 +149,9 @@ def part_two():
 					b = True
 
 				if a and b:
-					print("-----")
-					print(contents[i][j]+"."+contents[i][j+2])
-					print("."+contents[i+1][j+1]+".")
-					print(contents[i+2][j]+"."+contents[i+2][j+2])
 					amount += 1
 
-	print(amount) # 1925
+	print("X MASes found:", amount) # 1925
 
 if __name__ == "__main__":
 	#part_one()

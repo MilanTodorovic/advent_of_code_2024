@@ -38,8 +38,8 @@ def part_one():
 def part_two(rules, bad_pages):
     lst = []
     for page in bad_pages[::]:
-        # do more passes
-        for i in range(5):
+        done = False
+        while not done:
             for rule in rules:
                 a, b = rule
                 if a in page and b in page:
@@ -47,6 +47,10 @@ def part_two(rules, bad_pages):
                     b_i = page.index(b)
                     if not a_i < b_i:
                         page[a_i], page[b_i] = page[b_i], page[a_i]
+                        break
+            else:
+                done = True
+
 
     for page in bad_pages:
         lst.append(page[len(page)//2])

@@ -54,7 +54,6 @@ def recombine(contents):
 					tmp.append(contents[j][k])
 				else:
 					break
-			#print("".join(tmp))
 			diagonal_tl_br.append("".join(tmp))
 
 	# Reverse the one above
@@ -73,7 +72,6 @@ def recombine(contents):
 						tmp.append(contents[k][l])
 					else:
 						break
-				# print("".join(tmp))
 				diagonal_tr_bl.append("".join(tmp))
 		else:
 			# do only one column per row
@@ -92,7 +90,7 @@ def recombine(contents):
 def part_one():
 	global XMAS, MAX_ROWS, MAX_COLUMNS
 	amount = 0
-	contenst = ""
+	contenst = None
 
 	with open("./input.txt", "r") as file:
 		contents = [c.strip() for c in file.readlines()] # remove '\n'
@@ -104,12 +102,16 @@ def part_one():
 
 	for x in contents:
 		amount += len(re.findall(XMAS, x))
+		print(amount)
 	for x in a:
 		amount += len(re.findall(XMAS, x))
+		print(amount)
 	for x in b:
 		amount += len(re.findall(XMAS, x))
+		print(amount)
 	for x in c:
 		amount += len(re.findall(XMAS, x))
+		print(amount)
 	for x in d:
 		amount += len(re.findall(XMAS, x))
 	for x in e:
@@ -119,11 +121,42 @@ def part_one():
 	for x in g:
 		amount += len(re.findall(XMAS, x))
 
-	print("Amount of 'XMAS' found:", amount) # 2483
+	print("Amount of 'XMAS' found:", amount) # 
 
 def part_two():
-	pass
+	global MAX_ROWS, MAX_COLUMNS
+	amount = 0
+	contenst = None
+
+	with open("./input.txt", "r") as file:
+		contents = [c.strip() for c in file.readlines()] # remove '\n'
+
+	MAX_ROWS = len(contents)
+	MAX_COLUMNS = len(contents[0]) # assuming all rows of equal len
+
+	for i in range(MAX_ROWS-2):
+		for j in range(MAX_COLUMNS-2):
+			a = False
+			b = False
+			if contents[i+1][j+1] == "A":
+				if contents[i][j] == "M" and contents[i+2][j+2] == "S":
+					a = True
+				elif contents[i][j] == "S" and contents[i+2][j+2] == "M":
+					a = True
+				if contents[i][j+2] == "M" and contents[i+2][j] == "S":
+					b = True
+				elif contents[i][j+2] == "S" and contents[i+2][j] == "M":
+					b = True
+
+				if a and b:
+					print("-----")
+					print(contents[i][j]+"."+contents[i][j+2])
+					print("."+contents[i+1][j+1]+".")
+					print(contents[i+2][j]+"."+contents[i+2][j+2])
+					amount += 1
+
+	print(amount) # 1925
 
 if __name__ == "__main__":
-	part_one()
-	#part_two()
+	#part_one()
+	part_two()

@@ -102,24 +102,24 @@ def part_one():
 
 	a,b,c,d,e,f,g = recombine(contents)
 
-	for c in contents:
-		amount += len(re.findall(XMAS, c))
-	for c in a:
-		amount += len(re.findall(XMAS, c))
-	for c in b:
-		amount += len(re.findall(XMAS, c))
+	for x in contents:
+		amount += len(re.findall(XMAS, x))
+	for x in a:
+		amount += len(re.findall(XMAS, x))
+	for x in b:
+		amount += len(re.findall(XMAS, x))
 	for x in c:
 		amount += len(re.findall(XMAS, x))
-	for c in d:
-		amount += len(re.findall(XMAS, c))
-	for c in e:
-		amount += len(re.findall(XMAS, c))
-	for c in f:
-		amount += len(re.findall(XMAS, c))
-	for c in g:
-		amount += len(re.findall(XMAS, c))
+	for x in d:
+		amount += len(re.findall(XMAS, x))
+	for x in e:
+		amount += len(re.findall(XMAS, x))
+	for x in f:
+		amount += len(re.findall(XMAS, x))
+	for x in g:
+		amount += len(re.findall(XMAS, x))
 
-	print("Amount of 'XMAS' found:", amount) # 
+	print("Amount of 'XMAS' found:", amount) # 2483
 
 def part_two():
 	pass

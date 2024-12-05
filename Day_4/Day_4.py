@@ -155,4 +155,8 @@ def part_two():
 
 if __name__ == "__main__":
 	#part_one()
+<<<<<<< HEAD
 	part_two()
+=======
+	part_two()
+>>>>>>> faf4655 (Some chnages)

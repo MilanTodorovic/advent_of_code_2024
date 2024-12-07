@@ -4,7 +4,6 @@ import re
 import timeit
 import copy
 
-SUCCESSFUL_OBSTACLES = 0
 
 @dataclass
 class Guard():
@@ -73,7 +72,7 @@ def get_path(grid, guard):
 
 
 def traverse_and_mark(grid, guard_position, guard_direction, guards_path):
-	global SUCCESSFUL_OBSTACLES, _MOVE, _MARK
+	global _MOVE, _MARK
 	_guard = Guard(guard_position, guard_direction)
 	_grid = copy.deepcopy(grid)
 	obstacle = ["#", "O"]
@@ -85,7 +84,7 @@ def traverse_and_mark(grid, guard_position, guard_direction, guards_path):
 		x = _guard.position[0] + _MOVE[_guard.facing][0]
 		y = _guard.position[1] + _MOVE[_guard.facing][1]
 		if (x < 0 or x == len(_grid)) or (y < 0 or y == len(_grid[0])):
-			on_grid = False
+			return 0
 		else:
 			if _grid[x][y] in obstacle:
 				_guard.facing = (_guard.facing + 1) % 4
@@ -94,12 +93,13 @@ def traverse_and_mark(grid, guard_position, guard_direction, guards_path):
 				if u == ".":
 					_grid[_guard.position[0]][_guard.position[1]]  = _MARK[_guard.facing]
 				else:
+					# I am unsure how to acount for a closed signle-path loop where the guard can walk just up and down
+					#	Adding a check to see if he stepped on a + just yields wrong results by a LOT
 					if _MARK[_guard.facing] != u:
 						_grid[_guard.position[0]][_guard.position[1]] = "+"
 					else:
 						return 1
 				_guard.position = (x,y)
-	return 0
 
 
 def part_one():
@@ -140,7 +140,7 @@ def part_two():
 		res = traverse_and_mark(contents, guard_position, guard_direction, path)
 		s.append(res)
 
-	print("Possible obstacles: ", sum(s))
+	print("Possible obstacles: ", sum(s)) # 1939, in ~45 sec
 
 if __name__ == "__main__":
 	#start = timeit.default_timer()

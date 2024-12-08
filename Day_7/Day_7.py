@@ -94,9 +94,5 @@ def solve(part_two=False):
     print("Total callibration result:", sum(results)) # 6392012777720 good, 61561126043536 low
 
 
-def part_two():
-    numbers = open_file()
-
-
 if __name__ == "__main__":
     solve(True)

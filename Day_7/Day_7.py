@@ -2,7 +2,7 @@
 from copy import deepcopy
 from itertools import product
 
-ARITHMETICS = {"*": lambda x,y: x*y, "+": lambda x,y: x+y, "-": lambda x,y: x-y, "/": lambda x,y: x//y}
+ARITHMETICS = {"*": lambda x,y: x*y, "+": lambda x,y: x+y, "-": lambda x,y: x-y, "/": lambda x,y: x//y, "|": lambda x,y: str(x)+str(y)}
 
 
 def open_file():
@@ -56,14 +56,17 @@ def make_operators(lenght):
     return r
 
 
-def part_one():
+def solve(part_two=False):
     results = []
     numbers = open_file()
 
     for calculations in numbers:
         expected = calculations[0]
         operands = calculations[1]
-        operators = list(product("+*",repeat=len(operands)-1))
+        if part_two:
+            operators = list(product("+*|",repeat=len(operands)-1))
+        else:
+            operators = list(product("+*",repeat=len(operands)-1))
 
         solved = False
 
@@ -74,9 +77,10 @@ def part_one():
             op = deepcopy(operands)
             for c in comb:
                 # take the first TWO operands and perfrom arithmetic opperation
-                calc = ARITHMETICS[c](op.pop(0), op.pop(0))
+                calc = int(ARITHMETICS[c](op.pop(0), op.pop(0)))
                 # put the calculation result as the first operand for the next iteration
                 op = [calc] + op
+                #print(op)
                 if len(op) == 1:
                     if expected == calc:
                         print("Found solution for", expected)
@@ -84,9 +88,10 @@ def part_one():
                         solved = True
                         break
         else:
-            print("No sloution for ", expected)
+            pass
+            #print("No sloution for ", expected)
 
-    print("Total callibration result:", sum(results)) # 6392012777720
+    print("Total callibration result:", sum(results)) # 6392012777720 good, 61561126043536 low
 
 
 def part_two():
@@ -94,5 +99,4 @@ def part_two():
 
 
 if __name__ == "__main__":
-    part_one()
-    #part_two()
+    solve(True)

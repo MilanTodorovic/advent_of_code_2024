@@ -43,23 +43,19 @@ def solve(part_two=False):
             lst[dot], lst[i] = lst[i], lst[dot]
     else:
         # fill empty space by moving whole blocks from the back to the front
-        #print(lst)
         j = 0
-        #print(lst.index(".", j))
-        for i in range(len(lst)-1,-1,-1):
-            dot = lst.index(".", j)
-            for k in range(dot, len(lst)):
-                while k<len(lst):
-                    if lst[k] == ".":
-                        k += 1
-                        continue
-                    else:
-                        k += 1
-                        j = k
-                        break
-                # available space at index i
-                available_space.append((i, j))
-        print(available_space)
+        print("'.' found at:", lst.index(".", j))
+        dot = lst.index(".", j)
+        for k in range(dot, len(lst)):
+            while k<len(lst):
+                if lst[k] == ".":
+                    k += 1
+                else:
+                    j = k + 1
+                    # available space at index i
+                    available_space.append((dot, j))
+                    break
+        print("Space:", available_space[:10])
 
     # calculate new chechsum
     if not part_two:

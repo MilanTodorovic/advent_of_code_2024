@@ -63,7 +63,7 @@ def traverse(_previous, _current, _map):
             if _current not in VISITED_TILES:
                 if not PART_TWO:
                     VISITED_TILES.append(_current)
-                print("|------>Found the peak!|")
+                #print("|------>Found the peak!|")
                 return 1
             else:
                 return 0
@@ -82,7 +82,7 @@ def traverse(_previous, _current, _map):
 def find_path(_start, _map):
     result = 0
     result += traverse(-1, _start, _map)
-    print(f"Path {_start} has a score of {result}.")
+    #print(f"Path {_start} has a score of {result}.")
     return result
 
 
@@ -95,17 +95,15 @@ def solve(part_two=False):
     topographic_map = open_file()
     MAX_ROW = len(topographic_map)
     MAX_COL = len(topographic_map[0])
-    #print(topographic_map)
-    #print(MAX_COL, MAX_ROW)
     starting_locations = get_starting_locations(topographic_map)
-    #print(starting_locations)
+
     # A*? Breadth-first? Flood? Time will tell
     sum_of_scores = 0
     for start in starting_locations:
         VISITED_TILES = []
-        print(f"|Path: {start}          |")
+        #print(f"|Path: {start}          |")
         sum_of_scores += find_path(start, topographic_map)
-        print("|----------------------|")
+        #print("|----------------------|")
     print("The sum of all path scores is", sum_of_scores)
 
 

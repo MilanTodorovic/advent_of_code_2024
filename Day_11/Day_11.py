@@ -13,7 +13,8 @@ def pre_calculate():
 	# the first 5 steps
 	pass
 
-
+# this whole thing needs to use a dictionary to store occurances of numbers else the RAM is eaten up
+# not my idea, ppl on reddit said so
 def blink(stones, times=1):
 	# Rules:
 	#	0 -> 1

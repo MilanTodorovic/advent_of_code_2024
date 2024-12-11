@@ -2,11 +2,18 @@
 from copy import deepcopy # TOO SLOW!!!!
 from time import time
 from functools import cache
-from multiprocessing import Process
+
 
 @cache
 def multiply_by_2024(number):
 	return int(number)*2024
+
+
+@cache
+def cut_stone(stone):
+	half = len(stone)//2
+	# removes leading zeroes
+	return stone[:half], str(int(stone[half:]))
 
 
 def pre_calculate():
@@ -31,9 +38,7 @@ def blink(stones, times=1):
 			if stone == "0":
 				stones[j] = "1"
 			elif len(stone)%2 == 0:
-				half = len(stone)//2
-				# removes leading zeroes
-				s1, s2 = stone[:half], str(int(stone[half:]))
+				s1, s2 = cut_stone(stone)
 				# Popping an element causes the whole list to shift, which takes precious time
 				# 	Just mark it as skippable and deduct the number of skippable items from the total
 				#stones.pop(j-popped)
@@ -63,11 +68,8 @@ def solve(blink_times=1, part_two=False):
 	content = open_file()
 	print(content)
 	pre_calculate()
-	# do the thing with dct look-ups
+	# TODO: do the thing with dct look-ups
 	for i in range(len(content)):
-		#p = Process(target=blink, args=[[content[i]], blink_times])
-		#p.start()
-		#p.join()
 		blink([content[i]], blink_times)
 	#blink(content, blink_times)
 

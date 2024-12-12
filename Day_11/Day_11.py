@@ -51,7 +51,6 @@ def blink(stones, times=1):
 					stones[j] = str(multiply_by_2024(stone))
 
 		print(f"Blick {i+1} in {time()-_t:.2f} seconds.")
-		#print(f"\tNo. of stones:", len(stones))
 	print(f"Finished in {time()-_t:.2f} seconds.")
 	print(f"\tNo. of stones:", len(stones)-stones.count("i"))
 
@@ -69,6 +68,8 @@ def solve(blink_times=1, part_two=False):
 	print(content)
 	pre_calculate()
 	# TODO: do the thing with dct look-ups
+	# EDIT: I don't get why dicts are so much faster when doing these calculations.
+	#	I am not going to steal anyone's solution for the sake of it.
 	for i in range(len(content)):
 		blink([content[i]], blink_times)
 	#blink(content, blink_times)

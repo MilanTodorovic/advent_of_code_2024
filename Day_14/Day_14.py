@@ -2,6 +2,7 @@
 import re
 from collections import defaultdict
 import math
+import sys, os, time
 
 PATTERN = "\=(-*\d+),(-*\d+)"
 # X - columns, Y - rows
@@ -12,8 +13,11 @@ FILE = None
 MIDDLE = None
 SECONDS = 0
 ROBOTS = {}
+NUMBER_OF_ROBOTS = 0
 
 def open_file():
+	global NUMBER_OF_ROBOTS
+
 	contents = defaultdict(list)
 	with open(FILE, "r") as file:
 		i = 0
@@ -24,10 +28,12 @@ def open_file():
 			v = (int(v[0]), int(v[1]))
 			contents[i].extend([p,v])
 			i += 1
+		print("no. of robots:", i)
+		NUMBER_OF_ROBOTS = i
 	return contents
 
 
-def draw_grid():
+def draw_grid(i):
 	grid  = [ [0]*GRID_SIZE[0] for i in range(GRID_SIZE[1])]
 	string_grid = []
 
@@ -42,11 +48,17 @@ def draw_grid():
 
 	# remove middle
 	#print("\nRemoved middle parts\n")
-	for i, s in zip(range(GRID_SIZE[1]), string_grid):
-		if i == MIDDLE[1]:
-			print(" "*GRID_SIZE[0])
-			continue
-		print(s)
+	#for i, s in zip(range(GRID_SIZE[1]), string_grid):
+	#	if i == MIDDLE[1]:
+	#		print(" "*GRID_SIZE[0])
+	#		continue
+	#	print(s)
+
+	k = f"Iteration {i}\n"+"\n".join(s for s in string_grid)+"\n"
+	os.system('clear')
+	sys.stdout.write(k)
+	sys.stdout.flush()
+	#print(k, end='\r', flush=True)
 
 def move():
 	for robot, p_and_v in ROBOTS.items():
@@ -62,30 +74,35 @@ def solve():
 
 	ROBOTS = open_file()
 	for i in range(SECONDS):
-		if i % 103 == 0:
-			draw_grid()
+		print(f"Iteration {i}", end='\r', flush=True)
 		move()
 
-	robots_per_quad = {0:0, 1:0, 2:0, 3:0}
+		# Indetned for part two
+		robots_per_quad = {0:0, 1:0, 2:0, 3:0}
 
-	for location in ROBOTS.values():
-		loc = location[0]
-		# Top left
-		if loc[0] < MIDDLE[0] and loc[1] < MIDDLE[1]:
-			robots_per_quad[0] += 1
-		# horizontal or vertical middle
-		elif loc[0] == MIDDLE[0] or loc[1] == MIDDLE[1]:
-			# discard
-			pass
-		# Bottom right
-		elif loc[0] > MIDDLE[0] and loc[1] < MIDDLE[1]:
-			robots_per_quad[1] += 1
-		# Bottom left
-		elif loc[0] < MIDDLE[0] and loc[1] > MIDDLE[1]:
-			robots_per_quad[2] += 1
-		# Top right
-		else:
-			robots_per_quad[3] += 1
+		for location in ROBOTS.values():
+			loc = location[0]
+			# Top left
+			if loc[0] < MIDDLE[0] and loc[1] < MIDDLE[1]:
+				robots_per_quad[0] += 1
+			# horizontal or vertical middle
+			elif loc[0] == MIDDLE[0] or loc[1] == MIDDLE[1]:
+				# discard
+				pass
+			# Bottom right
+			elif loc[0] > MIDDLE[0] and loc[1] < MIDDLE[1]:
+				robots_per_quad[1] += 1
+			# Bottom left
+			elif loc[0] < MIDDLE[0] and loc[1] > MIDDLE[1]:
+				robots_per_quad[2] += 1
+			# Top right
+			else:
+				robots_per_quad[3] += 1
+
+		for v in robots_per_quad.values():
+			if v >= NUMBER_OF_ROBOTS//3:
+				draw_grid(i) # 6354
+				input("Press 0 to coitinue...")
 
 	#print(robots_per_quad)
 	if SECONDS == 100:
@@ -103,5 +120,5 @@ if __name__ == "__main__":
 		GRID_SIZE = (101,103)
 		FILE = "./input.txt"
 	MIDDLE = (GRID_SIZE[0]//2, GRID_SIZE[1]//2)
-	SECONDS = 100 if not part_two else 101*103
+	SECONDS = 100 if not part_two else 10000000
 	solve()

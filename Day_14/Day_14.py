@@ -101,7 +101,7 @@ def solve():
 
 		for v in robots_per_quad.values():
 			if v >= NUMBER_OF_ROBOTS//3:
-				draw_grid(i) # 6354
+				draw_grid(i) # 6354 + 1 since it is counted from 0
 				input("Press 0 to coitinue...")
 
 	#print(robots_per_quad)

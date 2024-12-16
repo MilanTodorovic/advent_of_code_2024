@@ -1,4 +1,6 @@
-# Advent of Code 2024 - Day 13
+# Advent of Code 2024 - Day 13 - DNF
+# Solution which i don't understand:
+#	b=(py*ax-px*ay)/(by*ax-bx*ay) a=(px-b*bx)/ax
 import re
 from collections import defaultdict
 

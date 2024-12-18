@@ -1,6 +1,4 @@
 # Advent of Code 2024 - Day 15
-import sys
-
 
 MAP = []
 STEPS = ""
@@ -52,7 +50,7 @@ def open_file():
 
 def move(start:tuple, step:tuple, who:str):
 	global MAP
-	#print(start, step, who)
+
 	next_row = start[0] + step[0]
 	next_col = start[1] + step[1]
 	
@@ -62,7 +60,6 @@ def move(start:tuple, step:tuple, who:str):
 		return start
 
 	next_tile = MAP[next_row][next_col]
-	#print("Next tile is:", next_tile)
 
 	if next_tile == WALL:
 		return start
@@ -80,64 +77,47 @@ def move(start:tuple, step:tuple, who:str):
 		# 3 boxes can now be aligned and moved all at once
 		#	[][]
 		#	 []
-		if next_tile == WIDE_BOX[0]: # [
-			r1 = move((next_row,next_col), step, WIDE_BOX[0]) # left side
-			r2 = move((next_row,next_col+1), step, WIDE_BOX[1]) # right side
-			if r1 != (next_row,next_col) and r2 != (next_row,next_col+1):
-				# box moved successfully
-				MAP[next_row][next_col] = ROBOT
-				MAP[start[0]][start[1]] = FLOOR
-				return (next_row, next_col)
-			else:
-				return start
-		# if who is [ and next is ]
-		# so what?
-		elif next_tile == WIDE_BOX[1] and who != WIDE_BOX[0]: # ]
-			r1 = move((next_row,next_col-1), step, WIDE_BOX[0]) # left side
-			r2 = move((next_row,next_col), step, WIDE_BOX[1]) # right side
-			if r1 != (next_row,next_col-1) and r2 != (next_row,next_col):
-				# box moved successfully
-				MAP[next_row][next_col] = ROBOT
-				MAP[start[0]][start[1]] = FLOOR
-				return (next_row, next_col)
-			else:
-				return start
-		# if next is ]
-		else:
-			r = move((next_row,next_col), step, WIDE_BOX[1]) # right side
+
+		if step == MOVE[">"] or step == MOVE["<"]:
+			r = move((next_row,next_col), step, next_tile)
 			if r != (next_row,next_col):
-				# box moved successfully
-				MAP[next_row][next_col] = WIDE_BOX[1]
+				MAP[next_row][next_col] = who
 				MAP[start[0]][start[1]] = FLOOR
 				return (next_row, next_col)
+			else:
+				return start
+		else:
+			# movement is up/down and the side is either [ or ]
+			if next_tile == WIDE_BOX[0]:
+				n1 = (next_row,next_col)
+				n2 = (next_row,next_col+1)
+			else:
+				n1 = (next_row,next_col-1)
+				n2 = (next_row,next_col)
+
+			r1 = move(n1, step, WIDE_BOX[0])
+			if r1 != n1:
+				r2 = move(n2, step, WIDE_BOX[1])
+				if r2 != n2:
+					MAP[next_row][next_col] = who
+					MAP[start[0]][start[1]] = FLOOR
+					return (next_row, next_col)
+				else:
+					MAP[r1[0]][r1[1]] = FLOOR
+					MAP[n1[0]][n1[1]] = WIDE_BOX[0]
+					return start
 			else:
 				return start
 	else:
-		if who in WIDE_BOX:
-			if who == WIDE_BOX[0]:
-				MAP[next_row][next_col+1] = WIDE_BOX[1]
-				MAP[next_row][next_col] = who
-				MAP[start[0]][start[1]] = FLOOR
-				return (next_row, next_col)
-			else:
-				MAP[next_row][next_col-1] = WIDE_BOX[0]
-				MAP[next_row][next_col] = who
-				MAP[start[0]][start[1]] = FLOOR
-				return (next_row, next_col)
-		else:
-			MAP[next_row][next_col] = who
-			MAP[start[0]][start[1]] = FLOOR
-			return (next_row, next_col)
+		MAP[next_row][next_col] = who
+		MAP[start[0]][start[1]] = FLOOR
+		return (next_row, next_col)
 
 
 def start_moving():
 	_start =  START
-	for row in MAP:
-		print("".join(r for r in row))
-	print("----------------------")
 	# for-loop because sys.setrecursionlimit() is L A M E
 	for step in STEPS:
-		print(_start, step)
 		_start = move(_start, MOVE[step], ROBOT)
 		for row in MAP:
 			print("".join(r for r in row))
@@ -158,14 +138,13 @@ def calculate_distance():
 			j+=1
 		i+=1
 		j=0
-	print("Total score:", total)
+	print("Total score:", total) # 1490942, ????
 
 
 if __name__ == "__main__":
-	# well well well
-	# if it isn't the trusty recursionlimit for part two
-	sys.setrecursionlimit(100)
-	test = True
+	# return all coordinates and then write the moves
+	# dont do it if one is ok, but the rest isnt
+	test = True # result should be 1216 for https://www.reddit.com/r/adventofcode/comments/1heoj7f/comment/m25oyt8/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1
 	PART_TWO = True
 	if test:
 		FILE = "./test_input.txt"

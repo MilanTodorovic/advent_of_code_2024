@@ -1,4 +1,5 @@
 # Advent of Code 2024 - Day 15
+from collections import defaultdict
 
 MAP = []
 STEPS = ""
@@ -12,6 +13,7 @@ WALL = "#"
 ROBOT = "@"
 FLOOR = "."
 START = None
+UPDATES = defaultdict(set)
 PART_TWO = False
 
 
@@ -49,79 +51,92 @@ def open_file():
 
 
 def move(start:tuple, step:tuple, who:str):
-	global MAP
+	global MAP, UPDATES
 
 	next_row = start[0] + step[0]
 	next_col = start[1] + step[1]
 	
 	if next_row < 0 or next_row > GRID_SIZE[0]:
-		return start
+		return False
+
 	if next_col < 0 or next_col > GRID_SIZE[1]:
-		return start
+		return False
 
 	next_tile = MAP[next_row][next_col]
 
 	if next_tile == WALL:
-		return start
+		return False
 	elif next_tile == BOX:
 		result = move((next_row,next_col), step, BOX)
-		if result != (next_row,next_col):
-			# box moved successfully
-			MAP[next_row][next_col] = who
-			MAP[start[0]][start[1]] = FLOOR
-			return (next_row, next_col)
+		if result:
+			UPDATES[who].add((next_row, next_col))
+			UPDATES[FLOOR].add(start)
+			return True
 		else:
-			return start
+			return False
 	elif next_tile in WIDE_BOX:
 		# both side have to be able to move
 		# 3 boxes can now be aligned and moved all at once
 		#	[][]
 		#	 []
 
-		if step == MOVE[">"] or step == MOVE["<"]:
-			r = move((next_row,next_col), step, next_tile)
-			if r != (next_row,next_col):
-				MAP[next_row][next_col] = who
-				MAP[start[0]][start[1]] = FLOOR
-				return (next_row, next_col)
+		if step == MOVES[">"] or step == MOVES["<"]:
+			result = move((next_row,next_col), step, next_tile)
+			if result:
+				UPDATES[who].add((next_row, next_col))
+				UPDATES[FLOOR].add(start)
+				return True
 			else:
-				return start
+				return False
 		else:
 			# movement is up/down and the side is either [ or ]
 			if next_tile == WIDE_BOX[0]:
 				n1 = (next_row,next_col)
 				n2 = (next_row,next_col+1)
+				s1 = start
+				s2 = start[0], start[1]+1
 			else:
 				n1 = (next_row,next_col-1)
 				n2 = (next_row,next_col)
+				s1 = start[0], start[1]-1
+				s2 = start
+				
 
 			r1 = move(n1, step, WIDE_BOX[0])
-			if r1 != n1:
+			if r1:
 				r2 = move(n2, step, WIDE_BOX[1])
-				if r2 != n2:
-					MAP[next_row][next_col] = who
-					MAP[start[0]][start[1]] = FLOOR
-					return (next_row, next_col)
+				if r2:
+					UPDATES[who].add((next_row,next_col))
+					UPDATES[FLOOR].add(start)
+					return True
 				else:
-					MAP[r1[0]][r1[1]] = FLOOR
-					MAP[n1[0]][n1[1]] = WIDE_BOX[0]
-					return start
+					return False
 			else:
-				return start
+				return False
 	else:
-		MAP[next_row][next_col] = who
-		MAP[start[0]][start[1]] = FLOOR
-		return (next_row, next_col)
+		UPDATES[who].add((next_row, next_col))
+		UPDATES[FLOOR].add(start)
+		return True
 
 
 def start_moving():
 	_start =  START
 	# for-loop because sys.setrecursionlimit() is L A M E
 	for step in STEPS:
-		_start = move(_start, MOVE[step], ROBOT)
-		for row in MAP:
-			print("".join(r for r in row))
-		print("----------------------")
+		_r = move(_start, MOVES[step], ROBOT)
+		if _r:
+			for c in UPDATES[FLOOR]:
+				MAP[c[0]][c[1]] = FLOOR
+			for c in UPDATES[BOX]:
+				MAP[c[0]][c[1]] = FLOOR
+			for c in UPDATES[WIDE_BOX[0]]:
+				MAP[c[0]][c[1]] = WIDE_BOX[0]
+			for c in UPDATES[WIDE_BOX[1]]:
+				MAP[c[0]][c[1]] = WIDE_BOX[1]
+			for c in UPDATES[ROBOT]:
+				MAP[c[0]][c[1]] = ROBOT
+				_start = c
+		UPDATES =defaultdict(set)
 
 
 def calculate_distance():
@@ -138,7 +153,7 @@ def calculate_distance():
 			j+=1
 		i+=1
 		j=0
-	print("Total score:", total) # 1490942, ????
+	print("Total score:", total) # 1490942, 1519202
 
 
 if __name__ == "__main__":

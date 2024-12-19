@@ -93,15 +93,10 @@ def move(start:tuple, step:tuple, who:str):
 			if next_tile == WIDE_BOX[0]:
 				n1 = (next_row,next_col)
 				n2 = (next_row,next_col+1)
-				s1 = start
-				s2 = start[0], start[1]+1
 			else:
 				n1 = (next_row,next_col-1)
 				n2 = (next_row,next_col)
-				s1 = start[0], start[1]-1
-				s2 = start
 				
-
 			r1 = move(n1, step, WIDE_BOX[0])
 			if r1:
 				r2 = move(n2, step, WIDE_BOX[1])
@@ -149,7 +144,6 @@ def calculate_distance():
 			if col == BOX or col == WIDE_BOX[0]:
 				score = 100*i+j
 				total += score
-				#print(f"Box found at ({i},{j}) giving a score of {score}.\nTotal is {total}.")
 			j+=1
 		i+=1
 		j=0

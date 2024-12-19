@@ -5,7 +5,7 @@ MAP = []
 STEPS = ""
 FILE = ""
 # (ROW, COL)
-MOVE = {"^":(-1,0), ">":(0,+1), "v":(+1,0), "<":(0,-1)}
+MOVES = {"^":(-1,0), ">":(0,+1), "v":(+1,0), "<":(0,-1)}
 GRID_SIZE = None
 BOX = "O"
 WIDE_BOX = "[]"
@@ -115,6 +115,8 @@ def move(start:tuple, step:tuple, who:str):
 
 
 def start_moving():
+	global UPDATES
+	
 	_start =  START
 	# for-loop because sys.setrecursionlimit() is L A M E
 	for step in STEPS:
